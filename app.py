@@ -13,6 +13,10 @@ import re
 import os
 import platform
 
+import random
+from pydub import AudioSegment
+import io
+
 import websocket
 import json
 import _thread
@@ -68,6 +72,7 @@ def handler(first_audio_file,second_audio_file,requestor_id,requestor_type,reque
     ### Encryption and Decryption for the files ###
     mfcc_001 = sample_from_mfcc(read_mfcc(file_names[0], SAMPLE_RATE), NUM_FRAMES)
     mfcc_002 = sample_from_mfcc(read_mfcc(file_names[1], SAMPLE_RATE), NUM_FRAMES)
+
 
     # Call the model to get the embeddings of shape (1, 512) for each file.
     predict_001 = model.m.predict(np.expand_dims(mfcc_001, axis=0))
