@@ -3,7 +3,6 @@
 
 import logging
 
-
 from constants import SAMPLE_RATE
 from testing import test
 
