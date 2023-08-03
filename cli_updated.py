@@ -2,25 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import os
 
-import click
 
-from audio import Audio
-from batcher import KerasFormatConverter
-from constants import SAMPLE_RATE, NUM_FRAMES
+from constants import SAMPLE_RATE
 from testing import test
-from utils import ClickType as Ct, ensures_dir
-from utils import init_pandas
 
 logger = logging.getLogger(__name__)
 
-VERSION = '3.0a'
-working_dir = 'C:/Users/wisam/Desktop/deep-speaker-master/.deep-speaker-wd/triplet-training/'
+VERSION = "3.0a"
+working_dir = "C:/Users/wisam/Desktop/deep-speaker-master/.deep-speaker-wd/triplet-training/"
 # audio_dir = 'C:/Users/wisam/Desktop/deep-speaker-master/LibriSpeech/test-clean/61/70968'
 sample_rate = SAMPLE_RATE
-counts_per_speaker = 600,100
-checkpoint_file = 'ResCNN_triplet_training_checkpoint_265.h5'
+counts_per_speaker = 600, 100
+checkpoint_file = "ResCNN_triplet_training_checkpoint_265.h5"
 pre_training_phase = False
 
 
@@ -37,6 +31,6 @@ def test_model(working_dir, checkpoint_file):
     test(working_dir, checkpoint_file)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_model(working_dir, checkpoint_file)
     # cli()

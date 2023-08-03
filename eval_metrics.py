@@ -21,8 +21,13 @@ def calculate_roc(thresholds, sims, labels):
     # Find the best threshold for the fold
 
     for threshold_idx, threshold in enumerate(thresholds):
-        tprs[threshold_idx], fprs[threshold_idx], precisions[threshold_idx], fms[threshold_idx], acc_train[
-            threshold_idx] = calculate_accuracy(threshold, sims, labels)
+        (
+            tprs[threshold_idx],
+            fprs[threshold_idx],
+            precisions[threshold_idx],
+            fms[threshold_idx],
+            acc_train[threshold_idx],
+        ) = calculate_accuracy(threshold, sims, labels)
 
     bestindex = np.argmax(fms)
     bestfm = fms[bestindex]
@@ -36,7 +41,11 @@ def calculate_accuracy(threshold, sims, actual_issame):
     predict_issame = np.greater(sims, threshold)
     tp = np.sum(np.logical_and(predict_issame, actual_issame))
     fp = np.sum(np.logical_and(predict_issame, np.logical_not(actual_issame)))
-    tn = np.sum(np.logical_and(np.logical_not(predict_issame), np.logical_not(actual_issame)))
+    tn = np.sum(
+        np.logical_and(
+            np.logical_not(predict_issame), np.logical_not(actual_issame)
+        )
+    )
     fn = np.sum(np.logical_and(np.logical_not(predict_issame), actual_issame))
 
     tpr = 0 if (tp + fn == 0) else float(tp) / float(tp + fn)  # recall
@@ -56,7 +65,9 @@ def calculate_eer(thresholds, sims, labels):
     eer_index = 0
     eer_diff = 100000000
     for threshold_idx, threshold in enumerate(thresholds):
-        frr_train[threshold_idx], far_train[threshold_idx] = calculate_val_far(threshold, sims, labels)
+        frr_train[threshold_idx], far_train[threshold_idx] = calculate_val_far(
+            threshold, sims, labels
+        )
         if abs(frr_train[threshold_idx] - far_train[threshold_idx]) < eer_diff:
             eer_diff = abs(frr_train[threshold_idx] - far_train[threshold_idx])
             eer_index = threshold_idx
@@ -71,7 +82,9 @@ def calculate_eer(thresholds, sims, labels):
 def calculate_val_far(threshold, sims, actual_issame):
     predict_issame = np.greater(sims, threshold)
     true_accept = np.sum(np.logical_and(predict_issame, actual_issame))
-    false_accept = np.sum(np.logical_and(predict_issame, np.logical_not(actual_issame)))
+    false_accept = np.sum(
+        np.logical_and(predict_issame, np.logical_not(actual_issame))
+    )
     n_same = np.sum(actual_issame)
     n_diff = np.sum(np.logical_not(actual_issame))
     if n_diff == 0:

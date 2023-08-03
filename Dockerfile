@@ -1,4 +1,4 @@
-FROM python:3.7.6
+FROM python:3.10
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 RUN python -m pip install --upgrade pip
 # -----------------------------------
@@ -24,7 +24,6 @@ COPY ./triplet_loss.py /app/
 COPY ./utils.py /app/
 COPY ./app.py /app/
 COPY ./eval_metrics.py /app/
-COPY ./requirements.txt /app/
 COPY ./pyproject.toml /app/
 # -----------------------------------
 # switch to application directory
@@ -33,16 +32,9 @@ WORKDIR /app
 # update image os
 RUN python -m pip install --upgrade pip
 RUN apt-get update
-#RUN pip install poetry
-RUN pip install websocket-client
-RUN pip install rel
-RUN pip install requests
-RUN pip install -r requirements.txt
-#RUN poetry config virtualenvs.create false
-#RUN poetry install
-# -----------------------------------
-
-
+RUN pip install poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install
 # -----------------------------------
 # environment variables
 ENV PYTHONUNBUFFERED=1

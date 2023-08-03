@@ -28,8 +28,8 @@ def deep_speaker_loss(y_true, y_pred, alpha=ALPHA):
     split = K.shape(y_pred)[0] // 3
 
     anchor = y_pred[0:split]
-    positive_ex = y_pred[split:2 * split]
-    negative_ex = y_pred[2 * split:]
+    positive_ex = y_pred[split : 2 * split]
+    negative_ex = y_pred[2 * split :]
 
     # If the loss does not decrease below ALPHA then the model does not learn anything.
     # If all anchor = positive = negative (model outputs the same vector always).
@@ -43,20 +43,64 @@ def deep_speaker_loss(y_true, y_pred, alpha=ALPHA):
     return total_loss
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import numpy as np
 
-    print(deep_speaker_loss(alpha=0.1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
-    print(deep_speaker_loss(alpha=1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
-    print(deep_speaker_loss(alpha=2, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
-    print('--------------')
-    print(deep_speaker_loss(alpha=2, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])))
-    print(deep_speaker_loss(alpha=1, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])))
-    print(deep_speaker_loss(alpha=0.1, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])))
-    print(deep_speaker_loss(alpha=0.2, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])))
+    print(
+        deep_speaker_loss(
+            alpha=0.1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=2, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )
+    print("--------------")
+    print(
+        deep_speaker_loss(
+            alpha=2, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=1, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=0.1, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=0.2, y_true=0, y_pred=np.array([[0.6], [1.0], [0.0]])
+        )
+    )
 
-    print('--------------')
-    print(deep_speaker_loss(alpha=2, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
-    print(deep_speaker_loss(alpha=1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
-    print(deep_speaker_loss(alpha=0.1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
-    print(deep_speaker_loss(alpha=0.2, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])))
+    print("--------------")
+    print(
+        deep_speaker_loss(
+            alpha=2, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=0.1, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )
+    print(
+        deep_speaker_loss(
+            alpha=0.2, y_true=0, y_pred=np.array([[0.9], [1.0], [-1.0]])
+        )
+    )

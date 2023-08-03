@@ -1,26 +1,21 @@
-import random
-import numpy as np
-from audio import read_mfcc
-from batcher import sample_from_mfcc
-from constants import SAMPLE_RATE, NUM_FRAMES
-from conv_models import DeepSpeakerModel
-from testing import batch_cosine_similarity
-from flask import Flask, abort, request
-from tempfile import NamedTemporaryFile
 import datetime
 import hashlib
-import re
+import json
 import os
 import platform
-
 import random
-from pydub import AudioSegment
-import io
+from tempfile import NamedTemporaryFile
 
-import websocket
-import json
-import _thread
+import numpy as np
 import rel
+import websocket
+from flask import Flask, abort, request
+
+from audio import read_mfcc
+from batcher import sample_from_mfcc
+from constants import NUM_FRAMES, SAMPLE_RATE
+from conv_models import DeepSpeakerModel
+from testing import batch_cosine_similarity
 
 # Reproducible results.
 np.random.seed(123)
@@ -29,9 +24,10 @@ random.seed(123)
 # Define the model here.
 model = DeepSpeakerModel()
 
-model.m.load_weights('ResCNN_triplet_training_checkpoint_265.h5', by_name=True)
+model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
 
 app = Flask(__name__)
+
 
 def on_error(ws, error):
     print(error)
@@ -44,8 +40,18 @@ def on_close(ws, close_status_code, close_msg):
 def on_open(ws):
     print("### Connection established ###")
 
-@app.route('/speaker_verification/<first_audio_file>/<second_audio_file>/<requestor_id>/<requestor_type>/<request_id>', methods=['POST'])
-def handler(first_audio_file,second_audio_file,requestor_id,requestor_type,request_id):
+
+@app.route(
+    "/speaker_verification/<first_audio_file>/<second_audio_file>/<requestor_id>/<requestor_type>/<request_id>",
+    methods=["POST"],
+)
+def handler(
+    first_audio_file,
+    second_audio_file,
+    requestor_id,
+    requestor_type,
+    request_id,
+):
     if not request.files:
         # If the user didn't submit any files, return a 400 (Bad Request) error.
         abort(400)
@@ -70,9 +76,12 @@ def handler(first_audio_file,second_audio_file,requestor_id,requestor_type,reque
     # Process the uploaded files here...
     print(file_names)
     ### Encryption and Decryption for the files ###
-    mfcc_001 = sample_from_mfcc(read_mfcc(file_names[0], SAMPLE_RATE), NUM_FRAMES)
-    mfcc_002 = sample_from_mfcc(read_mfcc(file_names[1], SAMPLE_RATE), NUM_FRAMES)
-
+    mfcc_001 = sample_from_mfcc(
+        read_mfcc(file_names[0], SAMPLE_RATE), NUM_FRAMES
+    )
+    mfcc_002 = sample_from_mfcc(
+        read_mfcc(file_names[1], SAMPLE_RATE), NUM_FRAMES
+    )
 
     # Call the model to get the embeddings of shape (1, 512) for each file.
     predict_001 = model.m.predict(np.expand_dims(mfcc_001, axis=0))
@@ -99,42 +108,45 @@ def handler(first_audio_file,second_audio_file,requestor_id,requestor_type,reque
 
     # Generate a random hash using SHA-256 algorithm
     hash_object = hashlib.sha256()
-    hash_object.update(bytes(str(now), 'utf-8'))
+    hash_object.update(bytes(str(now), "utf-8"))
     hash_value = hash_object.hexdigest()
 
     # Concatenate the time and the hash
     analysis_id = str(analyzer_id) + str(now) + hash_value
 
     ws_req_final = {
-                    "RequestPostTopicUUID": {
-                    "topic_name": "SIFIS:Privacy_Aware_Speaker_Verification_Results",
-                    "topic_uuid": "Speaker_Verification_Results",
-                    "value": {
-                        "description": "Speaker Verification Results",
-                        "requestor_id": str(requestor_id),
-                        "requestor_type": str(requestor_type),
-                        "request_id": str(request_id),
-                        "analyzer_id": str(analyzer_id),
-                        "analysis_id": str(analysis_id),
-                        "connected": True,
-                        "first_audio_file": str(first_audio_file),
-                        "second_audio_file": str(second_audio_file),
-                        "Cosine Similarity": float(output),
-                        "Result": str(result)
-                    }
-                }
-            }
+        "RequestPostTopicUUID": {
+            "topic_name": "SIFIS:Privacy_Aware_Speaker_Verification_Results",
+            "topic_uuid": "Speaker_Verification_Results",
+            "value": {
+                "description": "Speaker Verification Results",
+                "requestor_id": str(requestor_id),
+                "requestor_type": str(requestor_type),
+                "request_id": str(request_id),
+                "analyzer_id": str(analyzer_id),
+                "analysis_id": str(analysis_id),
+                "connected": True,
+                "first_audio_file": str(first_audio_file),
+                "second_audio_file": str(second_audio_file),
+                "Cosine Similarity": float(output),
+                "Result": str(result),
+            },
+        }
+    }
 
     # return result
     ws.send(json.dumps(ws_req_final))
     return ws_req_final
 
+
 if __name__ == "__main__":
-    ws = websocket.WebSocketApp("ws://localhost:3000/ws",
-                                on_open=on_open,
-                                on_error=on_error,
-                                on_close=on_close)
+    ws = websocket.WebSocketApp(
+        "ws://localhost:3000/ws",
+        on_open=on_open,
+        on_error=on_error,
+        on_close=on_close,
+    )
 
     ws.run_forever(dispatcher=rel)  # Set dispatcher to automatic reconnection
     rel.signal(2, rel.abort)  # Keyboard Interrupt
-    app.run(host='0.0.0.0', port=7070)
+    app.run(host="0.0.0.0", port=7070)

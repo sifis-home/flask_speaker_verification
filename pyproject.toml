@@ -1,15 +1,20 @@
 [tool.poetry]
 name = "flask_speaker_verification"
-version = "0.1.0"
-description = ""
-authors = ["WisamAbbasi <39978331+WisamAbbasi@users.noreply.github.com>"]
+version = "0.0"
+description = "Speaker Verification"
+authors = ["WisamAbbasi <wesam.alabbasi@iit.cnr.it>"]
+repository = "https://github.com/sifis-home/flask_speaker_verification"
+license = "MIT"
+classifiers = [
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3 :: Only",
+]
+include = ["README.md", "LICENSE.md", "flask_speaker_verification/data/*"]
 
 [tool.poetry.dependencies]
-python = ">=3.7"
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-flask = "2.2.2"
+python = ">=3.10,<3.12"
 natsort = ">=7.0.1"
 librosa = ">=0.7.2"
 dill = ">=0.3.1.1"
@@ -23,7 +28,40 @@ Keras = ">=2.3.1"
 scipy = "<1.6.0"
 numpy = ">=1.18.2"
 numba = ">=0.48"
+pydub= "0.25.1"
+flask = "2.2.2"
+websocket-client = "1.6.1"
+rel = "0.4.9"
+requests = "2.28.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.1"
+pre-commit = "^3.0.4"
+black = "^23.1.0"
+isort = "^5.12.0"
+ruff = "^0.0.63"
+coverage = {extras = ["toml"], version = "^7.1.0"}
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "pip>=22.1.2"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.ruff]
+line-length = 79
+select = [
+    "F401",
+    "F403",
+]
+
+[tool.coverage.run]
+omit = [".*", "*/site-packages/*"]
+
+[tool.coverage.report]
+fail_under = 60
