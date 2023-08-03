@@ -25,7 +25,9 @@ random.seed(123)
 model = DeepSpeakerModel()
 
 # model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
-model.m.load_weights("./ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+model.m.load_weights(
+    "./ResCNN_triplet_training_checkpoint_265.h5", by_name=True
+)
 
 app = Flask(__name__)
 
