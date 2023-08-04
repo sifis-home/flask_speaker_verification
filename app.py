@@ -26,7 +26,7 @@ model = DeepSpeakerModel()
 
 
 # Get the model path from the environment variable
-model_path = os.environ.get("/app/ResCNN_triplet_training_checkpoint_265.h5")
+model_path = os.environ.get("app/ResCNN_triplet_training_checkpoint_265.h5")
 if model_path is None:
     raise ValueError("The MODEL_PATH environment variable is not set")
 print(model_path)
