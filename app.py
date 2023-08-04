@@ -24,10 +24,14 @@ random.seed(123)
 # Define the model here.
 model = DeepSpeakerModel()
 
-# model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
-model.m.load_weights(
-    "./ResCNN_triplet_training_checkpoint_265.h5", by_name=True
-)
+
+# Get the model path from the environment variable
+model_path = os.environ.get("ResCNN_triplet_training_checkpoint_265.h5")
+if model_path is None:
+    raise ValueError("The MODEL_PATH environment variable is not set")
+return model_path
+
+model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
 
 app = Flask(__name__)
 
