@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 
 import numpy as np
 import rel
+import requests
 import websocket
 from flask import Flask, abort, request
 
@@ -24,19 +25,31 @@ random.seed(123)
 # Define the model here.
 model = DeepSpeakerModel()
 
-files = os.listdir(".")
-for file in files:
-    #   print(file)
-    if file == "ResCNN_triplet_training_checkpoint_265.h5":
-        print("Success")
-        model.m.load_weights(file, by_name=True)
+# files = os.listdir(".")
+# for file in files:
+#     #   print(file)
+#     if file == "ResCNN_triplet_training_checkpoint_265.h5":
+#         print("Success")
+#         model.m.load_weights(file, by_name=True)
 
+# URL of the pretrained model weights
+weights_url = (
+    "https://drive.google.com/uc?id=1F9NvdrarWZNktdX9KlRYWWHDwRkip_aP"
+)
 
-# # Get the model path from the environment variable
-# model_path = os.environ.get("ResCNN_triplet_training_checkpoint_265.h5")
-# if model_path is None:
-#     raise ValueError("The MODEL_PATH environment variable is not set")
-# print(model_path)
+# Local path to save the downloaded weights file
+local_weights_path = "ResCNN_triplet_training_checkpoint_265.h5"
+
+# Download the weights using requests
+response = requests.get(weights_url)
+if response.status_code == 200:
+    with open(local_weights_path, "wb") as f:
+        f.write(response.content)
+    print("Weights downloaded and saved successfully.")
+else:
+    print("Failed to download weights.")
+
+model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
 
 # model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
 
