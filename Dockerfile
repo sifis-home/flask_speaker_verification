@@ -18,7 +18,6 @@ COPY ./conv_models.py /app/
 COPY ./deep-speaker /app/
 COPY ./ResCNN_softmax_pre_training_checkpoint_102.h5 /app/
 COPY ./ResCNN_triplet_training_checkpoint_265.h5 /app/
-COPY ./Speaker_Verification.py /app/
 COPY ./testing.py /app/
 COPY ./triplet_loss.py /app/
 COPY ./utils.py /app/

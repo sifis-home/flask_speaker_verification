@@ -22,36 +22,35 @@ from testing import batch_cosine_similarity
 np.random.seed(123)
 random.seed(123)
 
-# Define the model here.
-model = DeepSpeakerModel()
 
-# files = os.listdir(".")
-# for file in files:
-#     #   print(file)
-#     if file == "ResCNN_triplet_training_checkpoint_265.h5":
-#         print("Success")
-#         model.m.load_weights(file, by_name=True)
+def load_model():
+    # Define the model here.
+    model = DeepSpeakerModel()
 
-# URL of the pretrained model weights
-weights_url = (
-    "https://drive.google.com/uc?id=1F9NvdrarWZNktdX9KlRYWWHDwRkip_aP"
-)
+    # URL of the pretrained model weights
+    weights_url = (
+        "https://drive.google.com/uc?id=1F9NvdrarWZNktdX9KlRYWWHDwRkip_aP"
+    )
 
-# Local path to save the downloaded weights file
-local_weights_path = "ResCNN_triplet_training_checkpoint_265.h5"
+    # Local path to save the downloaded weights file
+    local_weights_path = "ResCNN_triplet_training_checkpoint_265.h5"
 
-# Download the weights using requests
-response = requests.get(weights_url)
-if response.status_code == 200:
-    with open(local_weights_path, "wb") as f:
-        f.write(response.content)
-    print("Weights downloaded and saved successfully.")
-else:
-    print("Failed to download weights.")
+    # Download the weights using requests
+    response = requests.get(weights_url)
+    if response.status_code == 200:
+        with open(local_weights_path, "wb") as f:
+            f.write(response.content)
+        print("Weights downloaded and saved successfully.")
+    else:
+        print("Failed to download weights.")
 
-model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    model.m.load_weights(
+        "ResCNN_triplet_training_checkpoint_265.h5", by_name=True
+    )
 
-# model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    # model.m.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    return model
+
 
 app = Flask(__name__)
 
@@ -83,6 +82,7 @@ def handler(
         # If the user didn't submit any files, return a 400 (Bad Request) error.
         abort(400)
 
+    model = load_model()
     # Initialize empty lists for storing file names and handles
     file_names = []
     file_handles = []
@@ -101,7 +101,7 @@ def handler(
         file_handles.append(temp_file)
 
     # Process the uploaded files here...
-    print(file_names)
+    # print(file_names)
     ### Encryption and Decryption for the files ###
     mfcc_001 = sample_from_mfcc(
         read_mfcc(file_names[0], SAMPLE_RATE), NUM_FRAMES
@@ -128,7 +128,7 @@ def handler(
         os.unlink(handle.name)
 
     analyzer_id = platform.node()
-    print(analyzer_id)
+    # print(analyzer_id)
 
     # Get current date and time
     now = datetime.datetime.now()
