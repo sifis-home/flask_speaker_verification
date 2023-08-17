@@ -1,4 +1,19 @@
 # WP4 Analytic: Privacy-Aware Speaker Verification
+
+[![Actions Status][actions badge]][actions]
+[![CodeCov][codecov badge]][codecov]
+[![LICENSE][license badge]][license]
+
+<!-- Links -->
+[actions]: https://github.com/sifis-home/flask_speaker_verification/actions
+[codecov]: https://codecov.io/gh/sifis-home/flask_speaker_verification
+[license]: LICENSES/MIT.txt
+
+<!-- Badges -->
+[actions badge]: https://github.com/sifis-home/flask_speaker_verification/workflows/flask_speaker_verification/badge.svg
+[codecov badge]: https://codecov.io/gh/sifis-home/flask_speaker_verification/branch/master/graph/badge.svg
+[license badge]: https://img.shields.io/badge/license-MIT-blue.svg
+
 Speaker verification is a process that involves authenticating individuals based on the unique biometric aspect of their voice. This approach offers a non-intrusive and secure method for identity verification. Within the SIFIS-home environment, accurately identifying individuals is crucial for granting appropriate privileges based on predefined policies. To achieve this, a speaker verification system analyzes the voices of shared audio files and communicates the identified individuals to the smart-home components to grant or revoke access. 
 The Privacy-Aware Speaker Recognition and Verification system requires two audio files containing voice as input data for verification. The analytic is designed to process WAV or FLAC audio samples with specific requirements, including a sampling rate of 16 kHz or 8 kHz, a single channel (mono) audio, and the duration of the audio segment should be within a certain range, typically a few seconds. If the audio sample is in a different format, a preprocessing step may be necessary to adjust it to meet the input requirements of the analytic. 
 For speaker verification, we use ECAPA-TDN model of the [Deep Speaker System](https://github.com/philipperemy/deep-speaker). ECAPA-TDNN model employs ECAPA Time Delay Neural Networks (TDNNs) derived embeddings, and it consists of an input layer, followed by a convolutional block with ReLU activation and batch normalization. Then, a sequence of three Squeeze-and-Excitation and residual blocks. Next, a convolutional block with ReLU activation. Followed by a layer that applies statistics pooling to project variable-length utterances into fixed-length speaker characterizing embeddings with batch normalization. Then a fully connected dense layer with batch normalization, and an Additive Angular Margin (AAM) Softmax layer. Finally, an output layer to classify the inputs as yes or no for verification results. 
