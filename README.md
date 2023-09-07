@@ -24,6 +24,7 @@ Since applying privacy mechanisms would alter the speaker’s voice in the audio
 ## Deploying
 
 ### Privacy-Aware Speaker Verification in a container
+The DHT and the Analytics-API containers should be running before starting to build and run the image and container of the Privacy-Aware Speaker Verification.
 
 Privacy-Aware Speaker Verification is intended to run in a docker container on port 7070. The Dockerfile at the root of this repo describes the container. To build and run it execute the following commands:
 
